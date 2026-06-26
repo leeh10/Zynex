@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>NeonCord - Chat Privado</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+        body { background-color: #000000; color: #ffffff; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+
+        .chat-header { display: flex; align-items: center; padding: 15px 20px; background: rgba(15, 15, 20, 0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .back-btn { font-size: 20px; color: #00d2ff; text-decoration: none; margin-right: 15px; cursor: pointer; }
+        .chat-title-info { flex: 1; }
+        .chat-title-info h2 { font-size: 17px; font-weight: 600; }
+        .chat-title-info p { font-size: 11px; color: #8e8e93; }
+
+        .messages-container { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; background: radial-gradient(circle at top, #0c0d14 0%, #000000 100%); }
+        
+        /* Message Bubbles - iOS style combined with cyber theme */
+        .msg-row { display: flex; flex-direction: column; max-width: 75%; width: fit-content; animation: slideMsg 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+        .msg-row.sent { align-self: flex-end; align-items: flex-end; }
+        .msg-row.received { align-self: flex-start; align-items: flex-start; }
+
+        @keyframes slideMsg { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .msg-author { font-size: 11px; color: #8e8e93; margin-bottom: 3px; margin-left: 5px; }
+        .msg-bubble { padding: 12px 16px; border-radius: 18px; font-size: 15px; line-height: 1.4; word-break: break-word; }
+        
+        .sent .msg-bubble { background: linear-gradient(135deg, #00d2ff, #0066ff); color: #ffffff; border-bottom-right-radius: 4px; box-shadow: 0 4px 12px rgba(0, 102, 255, 0.2); }
+        .received .msg-bubble { background: #1c1c1e; color: #ffffff; border-bottom-left-radius: 4px; border: 1px solid rgba(255,255,255,0.03); }
+
+        /* Multimedia Content */
+        .media-img { max-width: 100%; border-radius: 12px; margin-top: 5px; border: 1px solid rgba(255,255,255,0.1); }
+        .audio-player { display: flex; align-items: center; gap: 10px; background: rgba(255,255,255,0.06); padding: 8px 12px; border-radius: 12px; font-size: 13px; margin-top: 4px; min-width: 180px; }
+
+        /* Input Bar Area */
+        .input-bar { padding: 10px 15px 30px 15px; background: rgba(15, 15, 20, 0.9); border-top: 1px solid rgba(255,255,255,0.05); display: flex; align-items: center; gap: 10px; }
+        
+        .attach-btn, .audio-btn { background: rgba(255,255,255,0.06); border: none; width: 38px; height: 38px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 18px; color: #00d2ff; cursor: pointer; transition: all 0.2s; }
+        .attach-btn:active, .audio-btn:active { background: rgba(255,255,255,0.15); transform: scale(0.92); }
+        
+        .chat-input { flex: 1; padding: 11px 16px; background: #1c1c1e; border: 1px solid rgba(255,255,255,0.05); border-radius: 20px; color: #ffffff; font-size: 15px; outline: none; }
+        .chat-input:focus { border-color: #00d2ff; }
+
+        .send-btn { background: #00d2ff; color: #000000; border: none; width: 38px; height: 38px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 16px; font-weight: bold; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+    <div class="chat-header">
+        <a href="lobby.html" class="back-btn">❮</a>
+        <div class="chat-title-info">
+            <h2 id="room-name">Sala Privada #XYZ</h2>
+            <p>● 2 personas conectadas en vivo</p>
+        </div>
+    </div>
+
+    <div class="messages-container" id="chat-box">
+        <!-- Ejemplo Mensaje Recibido -->
+        <div class="msg-row received">
+            <span class="msg-author">Breiner Rojas</span>
+            <div class="msg-bubble">¡Qué onda hermano! Ya quedó la interfaz Premium iOS Black en el cel. Mándate una foto o un audio para probar.</div>
+        </div>
+
+        <!-- Ejemplo Mensaje Enviado -->
+        <div class="msg-row sent">
+            <span class="msg-author">Tú</span>
+            <div class="msg-bubble">¡Ufff loco, las animaciones se ven ultra fluidas en Android! 🔥</div>
+        </div>
+
+        <!-- Ejemplo de Audio Recibido -->
+        <div class="msg-row received">
+            <span class="msg-author">Breiner Rojas</span>
+            <div class="msg-bubble">
+                <div class="audio-player">
+                    <span>▶</span>
+                    <div style="flex:1; height:3px; background:rgba(255,255,255,0.2); border-radius:2px; position:relative;">
+                        <div style="position:absolute; width:30%; height:100%; background:#00d2ff;"></div>
+                    </div>
+                    <span>0:14</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="input-bar">
+        <button class="attach-btn" onclick="alert('Vincula Firebase Storage para subir imágenes')">📷</button>
+        <button class="audio-btn" onclick="alert('Mantén presionado para grabar audio (Usa MediaRecorder API en JS)')">🎙</button>
+        <input type="text" class="chat-input" id="message-input" placeholder="Escribe un mensaje en vivo...">
+        <button class="send-btn" onclick="enviarMensajeProvisional()">➔</button>
+    </div>
+
+    <script>
+        // Funcionalidad visual instantánea para ver la animación en vivo al mandar mensaje
+        function enviarMensajeProvisional() {
+            let input = document.getElementById('message-input');
+            if(!input.value.trim()) return;
+            
+            let container = document.getElementById('chat-box');
+            let msgRow = document.createElement('div');
+            msgRow.className = 'msg-row sent';
+            msgRow.innerHTML = `
+                <span class="msg-author">Tú</span>
+                <div class="msg-bubble">${input.value}</div>
+            `;
+            container.appendChild(msgRow);
+            input.value = '';
+            container.scrollTop = container.scrollHeight;
+        }
+    </script>
+</body>
+</html>
