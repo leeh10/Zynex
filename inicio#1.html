@@ -104,7 +104,7 @@ animation:popup .5s;
 100%{ transform:scale(1); opacity:1; }
 }
 
-/* 🔥 FIX DEL SPINNER: Dimensiones fijas con display block para que no se deforme jamás */
+/* 🔄 TU LOADER ORIGINAL (Protegido contra deformaciones) */
 .spinner{
 width:45px;
 height:45px;
@@ -152,7 +152,6 @@ transform:scale(.97);
 background: rgba(70,70,70,.6);
 }
 
-/* 🔥 FIX DE ALINEACIÓN: Flex dinámico en lugar de absolute para mantener el loader perfecto */
 #connecting{
 display:none;
 flex-direction:column;
@@ -167,7 +166,7 @@ font-size:15px;
 color:#aaa;
 }
 
-/* 👑 NUEVA INTERFAZ DEL LOGO ZYNEX (OCULTA POR DEFECTO) */
+/* Interfaz del Logo Exitoso */
 #success-ui {
 display: none;
 flex-direction: column;
@@ -185,18 +184,13 @@ gap: 12px;
 margin-bottom: 15px;
 }
 
-.logo-badge {
-width: 40px;
-height: 40px;
-background: #007AFF;
+/* 🖼️ ESTILO DE TU LOGO (IMAGEN) */
+.logo-img {
+width: 45px;
+height: 45px;
+object-fit: contain; /* Evita que la imagen se estire feo */
 border-radius: 10px;
-display: flex;
-align-items: center;
-justify-content: center;
-font-weight: 800;
-font-size: 18px;
-box-shadow: 0 0 20px rgba(0, 122, 255, 0.5);
-border: 1px solid rgba(255,255,255,0.2);
+box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
 }
 
 .logo-title {
@@ -245,7 +239,7 @@ text-align: center;
 
     <div id="success-ui">
         <div class="logo-container">
-            <div class="logo-badge">Z</div>
+            <img class="logo-img" src="logo1.png" alt="Zynex Logo">
             <div class="logo-title">Logo | Zynex</div>
         </div>
         <div class="success-text">Has vuelto a conectarte</div>
@@ -286,32 +280,26 @@ function hideOffline(){
 document.getElementById("offline-screen").style.display="none";
 }
 
-/* 🔥 LÓGICA DE TRANSICIÓN MEJORADA */
 function retry(){
-// Ocultar pantalla de error y mostrar el "Conectando..." centrado
 document.getElementById("error").style.display="none";
 document.getElementById("connecting").style.display="flex";
 
 setTimeout(()=>{
 if(navigator.onLine){
-    // Ocultar carga y mostrar tu Logo de Zynex chido
     document.getElementById("connecting").style.display="none";
     document.getElementById("success-ui").style.display="flex";
     
-    // Esperar 1.5 segundos para que se aprecie la animación del logo y redirigir
     setTimeout(() => {
         window.location.href = "Inicio #1.html";
     }, 1500);
 }
 else{
-    // Si sigue fallando, regresa al botón de reintentar
     document.getElementById("connecting").style.display="none";
     document.getElementById("error").style.display="block";
 }
 },2000)
 }
 
-/* detectar internet en tiempo real */
 window.addEventListener("online", hideOffline);
 window.addEventListener("offline", showOffline);
 
