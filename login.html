@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>NeonCord - Premium Login</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+        body { background-color: #000000; color: #ffffff; display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow: hidden; padding: 20px; }
+        
+        /* iOS Background Glow Animation */
+        .bg-glow { position: absolute; width: 300px; height: 300px; background: radial-gradient(circle, rgba(0, 210, 255, 0.15) 0%, rgba(0,0,0,0) 70%); top: -50px; right: -50px; z-index: 0; animation: floatGlow 8s infinite alternate; }
+        .bg-glow-2 { position: absolute; width: 350px; height: 350px; background: radial-gradient(circle, rgba(255, 0, 85, 0.1) 0%, rgba(0,0,0,0) 70%); bottom: -80px; left: -80px; z-index: 0; animation: floatGlow 11s infinite alternate-reverse; }
+        
+        @keyframes floatGlow { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(30px, 20px) scale(1.2); } }
+
+        .ios-card { background: rgba(20, 20, 25, 0.7); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.08); width: 100%; max-width: 380px; padding: 35px 25px; border-radius: 24px; z-index: 10; box-shadow: 0 20px 40px rgba(0,0,0,0.5); animation: scaleUp 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
+        
+        @keyframes scaleUp { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+        .logo-area { text-align: center; margin-bottom: 30px; }
+        .logo-area h1 { font-size: 28px; font-weight: 700; letter-spacing: -0.5px; background: linear-gradient(135deg, #00d2ff, #0066ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .logo-area p { color: #8e8e93; font-size: 14px; margin-top: 5px; }
+
+        .input-group { margin-bottom: 20px; position: relative; }
+        .input-group label { display: block; font-size: 12px; font-weight: 600; text-transform: uppercase; color: #8e8e93; margin-bottom: 6px; margin-left: 4px; letter-spacing: 0.5px; }
+        .ios-input { width: 100%; padding: 14px 16px; background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 14px; color: #ffffff; font-size: 16px; outline: none; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); -webkit-appearance: none; }
+        .ios-input:focus { border-color: #00d2ff; background: rgba(255, 255, 255, 0.1); box-shadow: 0 0 0 4px rgba(0, 210, 255, 0.15); }
+
+        .ios-btn { width: 100%; padding: 15px; background: linear-gradient(135deg, #00d2ff, #0066ff); color: #ffffff; border: none; border-radius: 14px; font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; margin-top: 10px; display: flex; justify-content: center; align-items: center; box-shadow: 0 4px 15px rgba(0, 210, 255, 0.3); }
+        .ios-btn:active { transform: scale(0.97); opacity: 0.9; }
+
+        .switch-auth { text-align: center; margin-top: 20px; font-size: 14px; color: #8e8e93; }
+        .switch-auth a { color: #00d2ff; text-decoration: none; font-weight: 500; }
+    </style>
+</head>
+<body>
+    <div class="bg-glow"></div>
+    <div class="bg-glow-2"></div>
+
+    <div class="ios-card">
+        <div class="logo-area">
+            <h1>NeonCord</h1>
+            <p>Acceso Premium Premium iOS Black</p>
+        </div>
+        <form onsubmit="event.preventDefault(); window.location.href='lobby.html';">
+            <div class="input-group">
+                <label>Usuario</label>
+                <input type="text" class="ios-input" placeholder="Ej: ZyroxDeveloper" required>
+            </div>
+            <div class="input-group">
+                <label>Contraseña</label>
+                <input type="password" class="ios-input" placeholder="🔑 Mínimo 6 caracteres" required>
+            </div>
+            <button type="submit" class="ios-btn">Entrar al Sistema</button>
+        </form>
+        <div class="switch-auth">
+            ¿No tienes cuenta? <a href="#">Regístrate al instante</a>
+        </div>
+    </div>
+</body>
+</html>

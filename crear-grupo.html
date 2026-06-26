@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>NeonCord - Crear Grupo</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+        body { background-color: #000000; color: #ffffff; min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 20px; }
+
+        .container { width: 100%; max-width: 400px; margin-top: 40px; animation: slideUp 0.5s ease; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        .back-link { align-self: flex-start; color: #00d2ff; text-decoration: none; font-size: 16px; margin-bottom: 20px; display: inline-block; }
+
+        h2 { font-size: 26px; font-weight: 700; margin-bottom: 25px; background: linear-gradient(135deg, #ffffff, #8e8e93); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+        .ios-group-box { background: rgba(28, 28, 30, 0.7); border-radius: 16px; padding: 20px; border: 1px solid rgba(255,255,255,0.05); margin-bottom: 20px; }
+
+        .input-label { font-size: 12px; font-weight: 600; text-transform: uppercase; color: #8e8e93; margin-bottom: 8px; display: block; letter-spacing: 0.5px; }
+        .ios-input { width: 100%; padding: 14px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; color: white; font-size: 16px; outline: none; margin-bottom: 20px; }
+        .ios-input:focus { border-color: #00d2ff; }
+
+        .ios-btn-action { width: 100%; padding: 15px; background: #00d2ff; color: #000000; border: none; border-radius: 14px; font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 15px rgba(0, 210, 255, 0.2); }
+        .ios-btn-action:active { transform: scale(0.97); }
+
+        .code-reveal-box { display: none; margin-top: 25px; padding: 20px; background: rgba(255, 0, 85, 0.05); border: 1px dashed #ff0055; border-radius: 14px; text-align: center; animation: pulseGlow 2s infinite alternate; }
+        .generated-code { font-size: 28px; font-weight: 800; color: #ff0055; letter-spacing: 2px; margin: 10px 0; text-shadow: 0 0 12px rgba(255, 0, 85, 0.6); }
+        
+        @keyframes pulseGlow { from { box-shadow: 0 0 10px rgba(255,0,85,0.1); } to { box-shadow: 0 0 20px rgba(255,0,85,0.3); } }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <a href="lobby.html" class="back-link">❮ Volver al Lobby</a>
+        <h2>Configurar Nueva Sala</h2>
+        
+        <div class="ios-group-box">
+            <label class="input-label">Nombre del Canal / Grupo</label>
+            <input type="text" class="ios-input" id="group-name" placeholder="Ej: Los Reales Modders 🚀" value="">
+            
+            <button class="ios-btn-action" onclick="generarTokenGrupo()">Generar Token Seguro</button>
+        </div>
+
+        <div class="code-reveal-box" id="result-box">
+            <p style="font-size: 13px; color: #b5bac1;">¡Sala Lista en la Nube! Comparte este código:</p>
+            <div class="generated-code" id="token-txt">ZXR-99X</div>
+            <p style="font-size: 11px; color: #8e8e93; margin-bottom: 15px;">Tus amigos lo pegan en su cel y entran en tiempo real.</p>
+            <button class="ios-btn-action" style="background:#1c1c1e; color:white; border:1px solid rgba(255,255,255,0.1);" onclick="window.location.href='chat.html'">Ir al canal creado</button>
+        </div>
+    </div>
+
+    <script>
+        function generarTokenGrupo() {
+            let name = document.getElementById('group-name').value.trim();
+            if(!name) { alert('Por favor escribe un nombre para tu grupo bro'); return; }
+            
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            let token = '';
+            for (let i = 0; i < 6; i++) {
+                token += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            document.getElementById('token-txt').innerText = token;
+            document.getElementById('result-box').style.display = 'block';
+        }
+    </script>
+</body>
+</html>
