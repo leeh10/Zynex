@@ -1,361 +1,59 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Zyrox Network UI — Pipeline Monitor</title>
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>NeonCord - Cargando System</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        body { background-color: #000000; color: #ffffff; display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; overflow: hidden; }
 
-<style>
-:root {
-  --bg: #040404; 
-  --surface: rgba(10, 10, 10, 0.85); 
-  --surface2: #121212;
-  --border: rgba(255, 255, 255, 0.08); 
-  --border-active: rgba(255, 255, 255, 0.2);
-  --text: #f5f5f5;
-  --muted: #666666; 
-  --accent: #ffffff;
-  --success: #30D158;
-}
+        /* Contenedor de la animación */
+        .loader-container { text-align: center; animation: fadeIn 0.6s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
 
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-}
+        .logo { font-size: 32px; font-weight: 800; letter-spacing: -1px; margin-bottom: 20px; background: linear-gradient(135deg, #00d2ff, #0066ff, #ff0055); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-size: 200% 200%; animation: moveGradient 4s linear infinite; }
+        @keyframes moveGradient { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
 
-html,body{
-width:100%;
-height:100%;
-overflow:hidden;
-background: var(--bg);
-color: var(--text);
-font-family: 'Space Grotesk', sans-serif;
-}
+        /* Spinner estilo iOS / Cyberpunk */
+        .spinner { width: 40px; height: 40px; border: 3px solid rgba(255, 255, 255, 0.05); border-top-color: #00d2ff; border-radius: 50%; animation: spin 0.8s cubic-bezier(0.6, 0.2, 0.1, 1) infinite; margin: 0 auto 15px auto; box-shadow: 0 0 12px rgba(0, 210, 255, 0.2); }
+        @keyframes spin { to { transform: rotate(360deg); } }
 
-/* Grano sutil de fondo premium */
-body::before {
-  content:''; position:fixed; inset:0; pointer-events:none;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
-  opacity: 0.4; z-index: 1;
-}
-
-/* Fondo principal */
-body{
-background: radial-gradient(circle at top,#141414,#000000 70%);
-}
-
-/* Partículas */
-#particles{
-position:fixed;
-width:100%;
-height:100%;
-z-index:2;
-top:0;
-left:0;
-overflow:hidden;
-}
-
-.particle{
-position:absolute;
-background:rgba(255,255,255,0.08);
-border-radius:50%;
-filter:blur(1px);
-animation:float linear infinite;
-}
-
-@keyframes float{
-0%{ transform:translateY(100vh); opacity:0; }
-20%{ opacity:1; }
-100%{ transform:translateY(-120px); opacity:0; }
-}
-
-/* Contenido Principal */
-.main-content{
-height:100vh;
-display:flex;
-justify-content:center;
-align-items:center;
-flex-direction:column;
-position:relative;
-z-index:3;
-}
-
-.main-content h1{
-font-family: 'JetBrains Mono', monospace;
-font-size:35px;
-font-weight:700;
-margin-bottom:10px;
-letter-spacing: -1px;
-}
-
-.main-content p{
-color: var(--muted);
-font-size: 14px;
-}
-
-/* OFFLINE PANEL */
-#offline-screen{
-position:fixed;
-top:0;
-left:0;
-width:100%;
-height:100%;
-display:none;
-justify-content:center;
-align-items:center;
-z-index:9999;
-background: radial-gradient(circle at center, rgba(40,40,40,0.05), rgba(0,0,0,0.95));
-backdrop-filter:blur(40px);
--webkit-backdrop-filter:blur(40px);
-}
-
-/* Caja de Alerta Refinada */
-.ios-alert{
-width:340px;
-padding:40px 32px;
-border-radius:24px;
-background: var(--surface);
-border: 1px solid var(--border);
-box-shadow: 0 40px 80px rgba(0,0,0,0.9), inset 0 1px 0px rgba(255,255,255,0.05);
-will-change: transform, opacity;
-animation: scaleUp 0.5s cubic-bezier(.16,1,.3,1) both;
-}
-
-@keyframes scaleUp{
-0%{ transform:scale(.92); opacity:0; }
-100%{ transform:scale(1); opacity:1; }
-}
-
-/* Elementos de Flujo Interno Animados */
-.stage-container {
-  display: none;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  animation: stageFade 0.4s cubic-bezier(.16,1,.3,1) both;
-}
-
-@keyframes stageFade {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-/* Loader Circular Geométrico Exacto */
-.spinner{
-width:46px;
-height:46px;
-border-radius:50%;
-border:3px solid rgba(255,255,255,.05);
-border-top:3px solid var(--accent);
-animation:spin .75s cubic-bezier(0.42, 0, 0.58, 1) infinite;
-margin-bottom:24px;
-will-change: transform;
-}
-
-@keyframes spin{
-100%{ transform:rotate(360deg) }
-}
-
-h2{
-font-family: 'JetBrains Mono', monospace;
-font-size:20px;
-font-weight:600;
-text-align:center;
-margin-bottom:12px;
-letter-spacing: -0.5px;
-}
-
-.desc{
-text-align:center;
-color: var(--muted);
-font-size: 13px;
-line-height: 1.6;
-margin-bottom:28px;
-}
-
-.btn{
-width:100%;
-padding:14px;
-border:none;
-border-radius:10px;
-background: var(--text);
-color: #040404;
-font-size:14px;
-font-weight:600;
-cursor:pointer;
-transition: all 0.2s cubic-bezier(.16,1,.3,1);
-border: 1px solid transparent;
-}
-
-.btn:hover{
-transform:translateY(-1px);
-background: #a3a3a3;
-}
-
-/* Contenedor del Logo de Éxito */
-.logo-wrapper {
-  position: relative;
-  width: 64px;
-  height: 64px;
-  margin-bottom: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-/* Tu Imagen de Logotipo */
-.logo-img {
-width: 60px;
-height: 60px;
-object-fit: contain;
-border-radius: 12px;
-filter: drop-shadow(0 0 20px rgba(255,255,255,0.15));
-animation: pulseGlow 2s infinite ease-in-out;
-}
-
-@keyframes pulseGlow {
-  0%, 100% { filter: drop-shadow(0 0 15px rgba(255,255,255,0.1)); }
-  50% { filter: drop-shadow(0 0 25px rgba(255,255,255,0.3)); }
-}
-
-.success-text {
-color: var(--success);
-font-family: 'JetBrains Mono', monospace;
-font-size: 13px;
-font-weight: 600;
-letter-spacing: -0.2px;
-text-align: center;
-margin-top: 4px;
-}
-</style>
+        .status-text { font-size: 13px; font-weight: 500; color: #8e8e93; letter-spacing: 0.5px; text-transform: uppercase; }
+    </style>
 </head>
-
 <body>
 
-<div id="particles"></div>
-
-<div class="main-content">
-<h1>Zyrox</h1>
-<p>Pipeline Status: Operational</p>
-</div>
-
-<div id="offline-screen">
-<div class="ios-alert" id="box">
-
-    <!-- FASE 1: Interrupción de Red -->
-    <div id="stage-error" class="stage-container" style="display: flex;">
+    <div class="loader-container">
         <div class="spinner"></div>
-        <h2>Network Drop</h2>
-        <p class="desc">
-        La tubería de datos perdió sincronía con el host principal. Verifica tus parámetros de red.
-        </p>
-        <button class="btn" onclick="manualRetry()">
-        Forzar Reconexión
-        </button>
+        <div class="logo">NeonCord</div>
+        <div class="status-text" id="status">Conectando al servidor...</div>
     </div>
 
-    <!-- FASE 2: Conectando / Pooling Automático -->
-    <div id="stage-connecting" class="stage-container">
-        <div class="spinner"></div>
-        <h2 style="color: var(--muted);">Re-Routing...</h2>
-        <p class="desc" style="margin-bottom:0;">Sincronizando pasarela...</p>
-    </div>
+    <script>
+        // Simula la carga del sistema y la verificación de sesión antes de redireccionar
+        document.addEventListener("DOMContentLoaded", () => {
+            const statusTxt = document.getElementById('status');
+            
+            // Pasito 1: Simular verificación de base de datos
+            setTimeout(() => {
+                statusTxt.innerText = "Verificando credenciales...";
+            }, 1000);
 
-    <!-- FASE 3: Éxito e inyección del Logo -->
-    <div id="stage-success" class="stage-container">
-        <div class="logo-wrapper">
-            <!-- REEMPLAZA "mi_logo_zynex.png" POR TU ARCHIVO DE IMAGEN LOCAL O URL -->
-            <img class="logo-img" src="Logo1.png" alt="Zynex Architecture">
-        </div>
-        <h2>Zynex Engine</h2>
-        <div class="success-text">✓ Pipeline Restablecido</div>
-    </div>
-
-</div>
-</div>
-
-<script>
-/* Partículas dinámicas */
-let container=document.getElementById("particles");
-for(let i=0;i<35;i++){
-let p=document.createElement("div");
-p.classList.add("particle");
-let size=Math.random()*4+2;
-p.style.width=size+"px";
-p.style.height=size+"px";
-p.style.left=Math.random()*100+"%";
-p.style.animationDuration=(Math.random()*10+8)+"s";
-p.style.animationDelay=Math.random()*5+"s";
-container.appendChild(p);
-}
-
-/* Lógica del Monitor de Tubería de Red */
-function checkConnection(){
-  if(!navigator.onLine){
-    showOffline();
-  }else{
-    hideOffline();
-  }
-}
-
-function showOffline(){
-  document.getElementById("offline-screen").style.display="flex";
-  switchStage("error");
-}
-
-function hideOffline(){
-  document.getElementById("offline-screen").style.display="none";
-}
-
-function switchStage(stageName) {
-  document.getElementById("stage-error").style.display = stageName === 'error' ? 'flex' : 'none';
-  document.getElementById("stage-connecting").style.display = stageName === 'connecting' ? 'flex' : 'none';
-  document.getElementById("stage-success").style.display = stageName === 'success' ? 'flex' : 'none';
-}
-
-function manualRetry(){
-  switchStage("connecting");
-  setTimeout(()=>{
-    if(navigator.onLine){
-        executeSuccessSequence();
-    } else {
-        switchStage("error");
-    }
-  }, 1800);
-}
-
-/* Secuencia Estética de Carga de Módulo */
-function executeSuccessSequence() {
-  switchStage("success");
-  setTimeout(() => {
-      // Redirección suave al Pipeline de Autenticación
-      window.location.href = "login.html"; 
-  }, 1800);
-}
-
-/* 🔥 AUTOMATIZACIÓN TOTAL: Escucha activa del hardware de red */
-window.addEventListener("online", () => {
-  // Si el usuario está viendo la pantalla de error, haz la transición pro automática
-  if(document.getElementById("offline-screen").style.display === "flex") {
-    switchStage("connecting");
-    setTimeout(() => {
-      if(navigator.onLine) {
-        executeSuccessSequence();
-      } else {
-        switchStage("error");
-      }
-    }, 1200);
-  }
-});
-
-window.addEventListener("offline", showOffline);
-
-// Inicializar verificación en carga
-checkConnection();
-</script>
-
+            // Pasito 2: Redireccionar al archivo principal (login.html)
+            setTimeout(() => {
+                statusTxt.innerText = "Accediendo...";
+                
+                /* Aquí es donde se conecta todo, bro.
+                   Por ahora te manda a login.html. 
+                   Cuando metas Firebase, puedes validar si el usuario ya está logueado:
+                   - Si está logueado -> window.location.href = "lobby.html";
+                   - Si no -> window.location.href = "login.html";
+                */
+                window.location.href = "login.html";
+                
+            }, 2200); // 2.2 segundos de animación premium de entrada
+        });
+    </script>
 </body>
 </html>
